@@ -1,0 +1,64 @@
+resources:
+  jobs:
+    chinook_pipeline_job:
+      name: chinook_pipeline_job
+      email_notifications:
+        on_success:
+          - sakhare.c@northeastern.edu
+          - darshan@northeastern.edu
+          - shreya@northeastern.edu
+        on_failure:
+          - sakhare.c@northeastern.edu
+          - darshan@northeastern.edu
+          - shreya@northeastern.edu
+      tasks:
+        - task_key: setup_metadata
+          notebook_task:
+            notebook_path: 00_setup_metadata
+            source: GIT
+        - task_key: extract_to_raw
+          depends_on:
+            - task_key: setup_metadata
+          notebook_task:
+            notebook_path: 01_extract_to_raw
+            source: GIT
+        - task_key: raw_to_bronze
+          depends_on:
+            - task_key: extract_to_raw
+          notebook_task:
+            notebook_path: 02_raw_to_bronze
+            source: GIT
+        - task_key: bronze_to_silver
+          depends_on:
+            - task_key: raw_to_bronze
+          notebook_task:
+            notebook_path: 03_bronze_to_silver   darshannnn
+            base_parameters:
+              bronze_schema: chinook_bronze
+              silver_schema: chinook_silver
+            source: GIT
+        - task_key: silver_to_gold
+          depends_on:
+            - task_key: bronze_to_silver
+          notebook_task:
+            notebook_path: 04_silver_to_gold
+            base_parameters:
+              silver_schema: chinook_silver
+              gold_schema: chinook_gold
+            source: GIT
+      git_source:
+        git_url: https://github.com/Chinmay-Sakhare07/DataBI_TeamProject.git
+        git_provider: gitHub
+        git_branch: main
+      queue:
+        enabled: true
+      parameters:
+        - name: catalog_name
+          default: dbw_chinook_team
+        - name: schema_name
+          default: chinook_bronze
+        - name: base_path
+          default: /Volumes/dbw_chinook_team/raw_zone/chinook
+        - name: table_name
+          default: all
+      performance_target: PERFORMANCE_OPTIMIZED
