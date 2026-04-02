@@ -5,12 +5,12 @@ resources:
       email_notifications:
         on_success:
           - sakhare.c@northeastern.edu
-          - darshan@northeastern.edu
-          - shreya@northeastern.edu
+          - patgar.d@northeastern.edu
+          - darban.s@northeastern.edu
         on_failure:
           - sakhare.c@northeastern.edu
-          - darshan@northeastern.edu
-          - shreya@northeastern.edu
+          - patgar.d@northeastern.edu
+          - darban.sa@northeastern.edu
       tasks:
         - task_key: setup_metadata
           notebook_task:
